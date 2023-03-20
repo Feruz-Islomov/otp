@@ -1,0 +1,290 @@
+{% extends 'main.html' %} {% load static %}{% block balance %}
+<!--  -->
+{% if balance %}
+<div class="btn btn-success mx-1">Hisobingiz: {{balance.balance}}</div>
+{% endif %} {% endblock balance %} {% block orderbtn %}
+<a href="{% url 'driver_order_list' %}" class="btn btn-dark"
+  ><i class="fas fa-list"></i> Buyurtma tarixi</a
+>
+{% endblock orderbtn %} {% block orderhistory %}
+<a class="dropdown-item" href="{% url 'driver_order_list' %}"
+  >Buyurtma ro'yxati</a
+>
+{% endblock orderhistory %} {% block content %}
+<div id="lists">
+  {% for order in orders %}
+  <!--  -->
+  <div class="card mb-3 mt-3">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-sm-6">
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0">Avto model:</h6>
+            </div>
+            <div class="col-sm-6 text-secondary">{{order.car.Model}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0">Avto rang:</h6>
+            </div>
+            <div class="col-sm-6 text-secondary">{{order.car.Rang}}</div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0">Avto raqam:</h6>
+            </div>
+            <div class="col-sm-6 text-secondary">{{order.car.Raqam}}</div>
+          </div>
+          <!-- <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0">Avto lokatsiya:</h6>
+            </div>
+            <div class="col-sm-6 text-secondary">
+              <a
+                href="http://www.google.com/search?q={{order.latitude}}+{{order.longitude}}"
+                target="_blank"
+              >
+                <button class="btn btn-info">
+                  <i class="fas fa-map-pin"></i> manzil
+                </button>
+              </a>
+            </div>
+          </div> -->
+          <hr />
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0 text-danger">yuvish qismi:</h6>
+            </div>
+            <div class="col-sm-6 text-danger">{{order.part}}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0 text-danger">to'lov turi:</h6>
+            </div>
+            <div class="col-sm-6 text-danger">{{order.paytype}}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0 text-danger">narxi:</h6>
+            </div>
+            <div class="col-sm-6 text-danger">{{order.cost}}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <h6 class="mb-0 text-success">vaqt:</h6>
+            </div>
+            <div class="col-sm-6 text-success">{{order.date_ordered}}</div>
+          </div>
+          <div class="row">
+            <button
+              id="information"
+              data-client-name="{{order.customer.first_name}}"
+              data-client-tel="{{order.customer.tel}}"
+              data-model="{{order.car.Model}}"
+              data-rang="{{order.car.Rang}}"
+              data-raqam="{{order.car.Raqam}}"
+              data-latitude="{{order.latitude}}"
+              data-longitude="{{order.longitude}}"
+              data-part="{{order.part}}"
+              data-paytype="{{order.paytype}}"
+              data-cost="{{order.cost}}"
+              data-time="{{order.date_ordered}}"
+              data-id="{{order.id}}"
+              data-transactionid="{{order.transaction_id}}"
+              class="btn btn-secondary"
+              onclick="getdata(this)"
+            >
+              qabul qilish
+            </button>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          {% if order.car.Photo %}
+          <div class="card mb-3">
+            <img src="{{order.car.Photo.url}}" alt="img" />
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<!-- confirmation -->
+<div id="confirmation" class="row d-none">
+  <div class="col text-dark m-5 py-3 border sendmsg position-relative">
+    <div
+      role="button"
+      id="cancelconfirm"
+      onclick="cancelConfirmation()"
+      class="cursor-pointer position-absolute top-0 start-100 translate-middle rounded-circle p-1 px-2 bg-danger"
+    >
+      <i class="fas fa-times text-light"></i>
+    </div>
+    <div class="row">
+      <div class="row">
+        <div class="col"><h4 id="name">Ism:</h4></div>
+        <div class="col fontbarlow">
+          <h4><span id="clname"></span></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><h4>Telefon raqam:</h4></div>
+        <div class="col fontbarlow">
+          <h4>+<span id="cltel"></span></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><h4>Avto model:</h4></div>
+        <div class="col fontbarlow">
+          <h4><span id="model"></span></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><h4>Avto rangi:</h4></div>
+        <div class="col fontbarlow">
+          <h4><span id="rang"></span></h4>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col"><h4>Avto raqam:</h4></div>
+        <div class="col fontbarlow">
+          <h4><span id="raqam"></span></h4>
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="d-flex flex-column align-items-end">
+      <div id="wtype"></div>
+      <div></div>
+      <div>
+        narxi: <b class="fst-italic"><span id="cost"></span> so'm</b>
+      </div>
+      <div>
+        to'lov turi: <b><span class="fst-italic" id="ptype"></span></b>
+      </div>
+    </div>
+    <hr />
+
+    <button
+      id="sbt"
+      class="btn btn-primary mt-2 d-none"
+      onclick="submitFormData()"
+    >
+      Tasdiqlang
+    </button>
+  </div>
+</div>
+<!-- success -->
+<div id="success" class="row d-none">
+  <div class="col text-dark text-center m-5 py-3 border sendmsg">
+    <div class="display-5 mt-3">
+      <i class="fas fa-check text-success"></i>
+    </div>
+    <div class="display-5 my-3">Muvaffaqiyatli yuborildi!</div>
+    <div class="h3 fontgilda text-warning mt-5">
+      Sizga tez orada aloqaga chiqishadi.
+    </div>
+    <a href="{% url 'order_list' %}">
+      <button class="btn btn-success text-center">Mening buyurtmam</button>
+    </a>
+  </div>
+</div>
+<!-- loading -->
+<div id="loading" class="display-5 d-none">
+  <div class="spinner-border text-info" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+  Loading...
+</div>
+<div id="backmsg" class="display-5"></div>
+<script type="text/javascript">
+  let userdata;
+  function cancelConfirmation() {
+    userdata = {};
+    document.getElementById("confirmation").classList.add("d-none");
+    document.getElementById("lists").classList.remove("d-none");
+  }
+  function getdata(order) {
+    // const inf = document.getElementById("information").dataset;
+    document.getElementById("sbt").classList.remove("d-none");
+    document.getElementById("lists").classList.add("d-none");
+    document.getElementById("confirmation").classList.remove("d-none");
+    const client_name = order.getAttribute("data-client-name");
+    const client_tel = order.getAttribute("data-client-tel");
+    const model = order.getAttribute("data-model");
+    const rang = order.getAttribute("data-rang");
+    const raqam = order.getAttribute("data-raqam");
+    const latitude = order.getAttribute("data-latitude");
+    const longitude = order.getAttribute("data-longitude");
+    const part = order.getAttribute("data-part");
+    const paytype = order.getAttribute("data-paytype");
+    const cost = order.getAttribute("data-cost");
+    const time = order.getAttribute("data-time");
+    const id = order.getAttribute("data-id");
+    const transaction_id = order.getAttribute("data-transactionid");
+    const data = {
+      client_name,
+      client_tel,
+      model,
+      rang,
+      raqam,
+      latitude,
+      longitude,
+      part,
+      paytype,
+      cost,
+      time,
+      id,
+      transaction_id,
+    };
+    userdata = data;
+    console.log(data);
+
+    document.getElementById("clname").innerText = client_name;
+    document.getElementById("cltel").innerText = client_tel;
+    document.getElementById("model").innerText = model;
+    document.getElementById("rang").innerText = rang;
+    document.getElementById("raqam").innerText = raqam;
+    document.getElementById("cost").innerText = cost;
+    document.getElementById("ptype").innerText = paytype;
+  }
+  function submitFormData() {
+    if (userdata && userdata.id && userdata.longitude) {
+      document.getElementById("loading").classList.remove("d-none");
+      document.getElementById("confirmation").classList.add("d-none");
+
+      const userFormData = userdata;
+      var url = "/driver_cart/";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify({ form: userFormData }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success: ", data);
+          userdata = {};
+          document.getElementById("loading").classList.add("d-none");
+          document.getElementById("backmsg").classList.remove("d-none");
+          document.getElementById("backmsg").innerHTML =
+            '<a class="btn btn-primary" href="{% url "driverprofile" %}">profil sahifasiga o\'tish</a> <a class="btn btn-dark" href="{% url "driver_order_list" %}">mening buyurtmam</a></br>' +
+            data;
+        })
+        .catch((error) => {
+          alert("xatolik yuz berdi! Feruzga murojaat qiling");
+          window.location.href = "{% url 'driver_order_list' %}";
+        });
+    } else {
+      alert("Buyurtma qabul qiling");
+      window.location.href = "{% url 'orders' %}";
+    }
+  }
+</script>
+{% endblock content %}

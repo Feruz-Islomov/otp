@@ -1,0 +1,100 @@
+{% extends 'main.html' %} {% load static %} {% block content %}
+<div class="row mt-2">
+  <div class="col-sm">
+    <div class="alert alert-success">
+      <div class="display-5">number of users: {{nclient }}</div>
+      <div class="display-5">number of staff: {{ndriver}}</div>
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="alert alert-info">
+      <div class="display-5">waiting orders: {{waiting}}</div>
+      <div class="display-5">pending orders: {{pending}}</div>
+      <div class="display-5">finished orders: {{finished}}</div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-sm">
+    <div class="display-5 alert alert-success">total earned: {{total_sum}}</div>
+  </div>
+  <div class="col-sm">
+    <div class="display-5 alert alert-warning">
+      total staff money: {{staff_sum}}
+    </div>
+  </div>
+  <div class="col-sm">
+    <div class="display-5 alert alert-secondary">
+      total owner money: {{staff_sum}}
+    </div>
+  </div>
+</div>
+<div class="row">
+  {% if messages %} {% for message in messages %}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="alert"
+      aria-label="Close"
+    ></button>
+  </div>
+  {% endfor %} {% endif %}
+</div>
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Staff Name</th>
+        <th scope="col">City</th>
+        <th scope="col">Tel</th>
+        <th scope="col">Balance</th>
+        <th scope="col">total earned</th>
+        <th scope="col">pay</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for staff in staffs %}
+      <tr>
+        <td scope="row">{{ forloop.counter }}</td>
+        <td>{{staff.first_name}}</td>
+        <td>{{staff.shahar}}</td>
+        <td>{{staff.tel}}</td>
+        <td>{{staff.balance}}</td>
+        <td>2000000</td>
+        <td>
+          <a href="{% url 'balance_form' staff.pk %}" class="btn btn-primary"
+            >pay</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Client Name</th>
+        <th scope="col">City</th>
+        <th scope="col">Tel</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in clients %}
+      <tr>
+        <td scope="row">{{ forloop.counter }}</td>
+        <td>{{client.first_name}}</td>
+        <td>{{client.shahar}}</td>
+        <td>{{client.tel}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock content %}

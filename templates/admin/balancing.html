@@ -1,0 +1,39 @@
+{% extends 'main.html' %} {% load static %}
+<!--  -->
+{% block content %}
+<div class="display-5">Insert staff balance</div>
+<!-- <form method="POST">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Amount</label>
+    <input
+      type="number"
+      class="form-control"
+      name="balance"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      required
+    />
+  </div>
+  <input class="btn btn-success" type="submit" />
+  
+  </div>
+</form> -->
+<form method="POST" class="row g-2">
+  {% csrf_token %}
+  <div class="col-auto">
+    <label for="inputPassword2" class="visually-hidden">Amount</label>
+    <input
+      type="number"
+      class="form-control"
+      name="balance"
+      id="inputPassword2"
+      placeholder="summani kiriting"
+      required
+    />
+  </div>
+  <div class="col-auto">
+    <input type="submit" class="btn btn-primary" />
+  </div>
+</form>
+{% endblock content %}

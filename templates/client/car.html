@@ -1,0 +1,65 @@
+{% extends 'main.html' %}{% block orderbtn %}
+<a href="{% url 'order' %}" class="btn btn-warning"
+  ><h5 class="fas fa-shower"></h5>
+  <i class="fas fa-car"></i>Buyurtma</a
+>
+{% endblock orderbtn %} {% block content %}
+<div class="alert alert-success mt-2">
+  <i class="fas fa-check-circle"></i> Avtomobil muvaffaqiyatli qo'shildi!
+</div>
+<a href="{% url 'clientprofile' %}" class="btn btn-primary mb-2">
+  <i class="fas fa-arrow-circle-left"></i> Profilga qaytish
+</a>
+{% if object.Photo %}
+<!-- <div class="card mb-3">
+  <img
+    id="orderimgid"
+    class="orderimgclass"
+    src="{{ object.carPhoto.url }}"
+    alt="{{ object.carModel}}"
+
+  />
+</div>
+{% else %}
+<p>no images</p>
+{% endif %}
+<h3>{{object.carModel}}</h3>
+<h3>{{object.carNumber}}</h3>
+<h3>{{object.carcolor}}</h3> -->
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="row">
+          <div class="col-sm-6">
+            <h6 class="mb-0">Avto model:</h6>
+          </div>
+          <div class="col-sm-6 text-secondary">{{object.Model}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-6">
+            <h6 class="mb-0">Avto rang:</h6>
+          </div>
+          <div class="col-sm-6 text-secondary">{{object.Rang}}</div>
+        </div>
+        <hr />
+        <div class="row">
+          <div class="col-sm-6">
+            <h6 class="mb-0">Avto raqam:</h6>
+          </div>
+          <div class="col-sm-6 text-secondary">{{object.Raqam}}</div>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        {% if object.Photo %}
+        <div class="card mb-3">
+          <img src="{{object.Photo.url}}" alt="sampleimg" />
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,32 @@
+{% extends 'main.html' %} {% load static %} {% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col text-dark m-5 py-3 border sendmsg">
+      <h4>Ism: ...........</h4>
+      <h4>Telefon raqam: ...........</h4>
+      <h4>Avto model: ...........</h4>
+      <h4>Avto rangi: ...........</h4>
+      <h4>Avto raqam: ...........</h4>
+      <h4>Foto: ...........</h4>
+      <h4>Manzil: ...........</h4>
+      <hr />
+      <div class="d-flex flex-column align-items-end">
+        <div>Tashqi va ichki qism</div>
+        <div></div>
+        <div>narxi: 35000 so'm</div>
+      </div>
+      <hr />
+      <h3>To'lov servis ko'rsatuvchiga oldindan beriladi.</h3>
+      <a href="{% url 'success' %}">
+        <button
+          type="button"
+          class="btn btn-primary mb-3 w-100"
+          value="Yuboring"
+        >
+          Yuboring
+        </button></a
+      >
+    </div>
+  </div>
+</div>
+{% endblock content %}

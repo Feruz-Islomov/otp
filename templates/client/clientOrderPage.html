@@ -1,0 +1,358 @@
+{% extends 'main.html' %} {% load crispy_forms_tags %}
+<!--  -->
+{% load static %} {% block content %}
+
+<div class="container">
+  <div id="ordertitle" class="row">
+    <div class="col text-center">
+      <div class="display-5 fontgilda">Buyurtma bering!</div>
+    </div>
+    <div class="alert alert-success mt-2">
+      <h4 class="alert-heading">Avtomobilingizni tanlang:</h4>
+      {% for car in cars %}
+      <button
+        class="btn btn-dark"
+        data-car-id="{{car.id}}"
+        data-car-model="{{car.Model}}"
+        data-car-color="{{car.Rang}}"
+        data-car-number="{{car.Raqam}}"
+        data-car-photo="{{car.Photo.url}}"
+        onclick="getCar(this)"
+      >
+        {{car.Model}} | {{car.Raqam}}
+      </button>
+      {% empty %}
+      <div class="h6 text-danger">
+        Avtomobil mavjud emas!
+        <a href="{% url 'addcar' %}" class="btn btn-info"
+          ><i class="fas fa-car"></i> qo'shing</a
+        >
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- info -->
+  <div id="theinfo" class="row my-3 d-none">
+    <div class="card mb-3">
+      <img id="orderimgid" class="orderimgclass" src="" alt="sampleimg" />
+    </div>
+    <h4>Yuvish qismi:</h4>
+    <p class="fw-light">Faqat tashqi qism: 60,000 so'm</p>
+    <p class="fw-light">Tashqi va ichki qism: 70,000 so'm</p>
+    <p class="fw-light">VIP 3-fazalik: 100,000 so'm</p>
+    <p class="fw-light">Avtobus va Kamaz (tashqi): 150,000 so'm</p>
+    <select
+      id="washtype"
+      class="form-select form-select mb-3"
+      aria-label=".form-select example"
+    >
+      <option selected value="60000">Faqat tashqi qism</option>
+      <option value="70000">Tashqi va ichki qism</option>
+      <option value="100000">VIP 3-fazalik</option>
+      <option value="150000">Avtobus va Kamaz</option>
+    </select>
+    <h4>To'lov turi:</h4>
+    <select
+      id="paytype"
+      class="form-select form-select mb-3"
+      aria-label=".form-select example"
+    >
+      <option selected value="Naqd">Naqd</option>
+      <option value="Click">Click</option>
+    </select>
+    <button
+      type="button"
+      id="location"
+      onclick="getLocation()"
+      class="btn btn-outline-success w-100 mb-3"
+    >
+      <i class="fas fa-map-pin"></i> Manzil (lakatsiya)ni kiriting:
+      <i>ushbu tugmani bosish orqali </i>
+    </button>
+    <button
+      id="tasdiq"
+      class="btn btn-primary mb-3 w-100 d-none"
+      onclick="showConfirmation()"
+    >
+      Tasdiqlang
+    </button>
+  </div>
+  <!-- confirmation -->
+  <div id="confirmation" class="row d-none">
+    <div class="col text-dark m-5 py-3 border sendmsg position-relative">
+      <div
+        role="button"
+        id="cancelconfirm"
+        onclick="cancelConfirmation()"
+        class="cursor-pointer position-absolute top-0 start-100 translate-middle rounded-circle p-1 px-2 bg-danger"
+      >
+        <i class="fas fa-times text-light"></i>
+      </div>
+      <div class="row">
+        <div class="row">
+          <div class="col"><h4 id="name">Ism:</h4></div>
+          <div class="col fontbarlow"><h4>{{user.first_name}</h4></div>
+        </div>
+        <div class="row">
+          <div class="col"><h4>Telefon raqam:</h4></div>
+          <div class="col fontbarlow"><h4>+{{user.tel}}</h4></div>
+        </div>
+        <div class="row">
+          <div class="col"><h4>Avto model:</h4></div>
+          <div class="col fontbarlow">
+            <h4><span id="model"></span></h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"><h4>Avto rangi:</h4></div>
+          <div class="col fontbarlow">
+            <h4><span id="rang"></span></h4>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col"><h4>Avto raqam:</h4></div>
+          <div class="col fontbarlow">
+            <h4><span id="raqam"></span></h4>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div class="d-flex flex-column align-items-end">
+        <div id="wtype"></div>
+        <div></div>
+        <div>
+          narxi: <b class="fst-italic"><span id="cost"></span> so'm</b>
+        </div>
+        <div>
+          to'lov turi: <b><span class="fst-italic" id="ptype"></span></b>
+        </div>
+      </div>
+      <hr />
+      <!-- <h3 class="fw-lighter alert alert-danger">
+        Ushbu xizmat faqat yengil <i class="fas fa-car"></i> avtomobillar uchun!
+      </h3> -->
+
+      <button
+        type="button"
+        class="btn btn-primary mb-3 w-100"
+        value="Yuboring"
+        onclick="submitFormData()"
+      >
+        Yuboring
+      </button>
+    </div>
+  </div>
+  <!-- success -->
+  <div id="success" class="row d-none">
+    <div class="col text-dark text-center m-5 py-3 border sendmsg">
+      <div class="display-5 mt-3">
+        <i class="fas fa-check text-success"></i>
+      </div>
+      <div class="display-5 my-3">Muvaffaqiyatli yuborildi!</div>
+      <div class="h3 fontgilda text-warning mt-5">
+        Sizga tez orada aloqaga chiqishadi.
+      </div>
+      <a href="{% url 'order_list' %}">
+        <button class="btn btn-success text-center">Mening buyurtmam</button>
+      </a>
+    </div>
+  </div>
+  <!-- loading -->
+  <div id="loading" class="display-5 d-none">
+    <div class="spinner-border text-info" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+    Loading...
+  </div>
+  <!-- end -->
+</div>
+<script type="text/javascript">
+  let userdata = {};
+  let x = document.getElementById("location");
+
+  function cancelConfirmation() {
+    userdata = {};
+    document.getElementById("ordertitle").classList.remove("d-none");
+    document.getElementById("theinfo").classList.remove("d-none");
+    document.getElementById("confirmation").classList.add("d-none");
+    x.innerHTML =
+      '<i class="fas fa-map-pin"></i> Manzil (lakatsiya)ni kiriting: <i>ushbu tugmani bosish orqali </i>';
+    document.getElementById("tasdiq").classList.add("d-none");
+  }
+  function showConfirmation() {
+    document.getElementById("ordertitle").classList.add("d-none");
+    document.getElementById("theinfo").classList.add("d-none");
+    document.getElementById("confirmation").classList.remove("d-none");
+
+    const washtype = document.getElementById("washtype");
+    const text = washtype.options[washtype.selectedIndex].text;
+    document.getElementById("wtype").innerText = text;
+    userdata.part = text;
+
+    const cost = document.getElementById("washtype").value;
+    document.getElementById("cost").innerText = cost;
+    userdata.cost = parseInt(cost);
+
+    const paytype = document.getElementById("paytype").value;
+    document.getElementById("ptype").innerText = paytype;
+    userdata.paytype = paytype;
+
+    const selmodel = document.getElementById("model").innerText;
+    userdata.model = selmodel;
+  }
+  function getCar(car) {
+    const id = car.getAttribute("data-car-id");
+    userdata.carid = id;
+    const Model = car.getAttribute("data-car-model");
+    const Rang = car.getAttribute("data-car-color");
+    const Raqam = car.getAttribute("data-car-number");
+    const Photo = car.getAttribute("data-car-photo");
+    document.getElementById("orderimgid").src = Photo;
+    document.getElementById("theinfo").classList.remove("d-none");
+    document.getElementById("model").innerText = Model;
+    document.getElementById("rang").innerText = Rang;
+    document.getElementById("raqam").innerText = Raqam;
+  }
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+  }
+  function showPosition(position) {
+    x.innerText = "Manzilingiz aniqlandi, quyidagi tugmani bosing!";
+    document.getElementById("tasdiq").classList.remove("d-none");
+    userdata.longitude = position.coords.longitude;
+    userdata.latitude = position.coords.latitude;
+  }
+
+  function submitFormData() {
+    if (userdata.model && userdata.longitude) {
+      const userFormData = userdata;
+      document.getElementById("confirmation").classList.add("d-none");
+      document.getElementById("loading").classList.remove("d-none");
+
+      // console.log("User inFo: ", userFormData);
+
+      var url = "/process_order/";
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        body: JSON.stringify({ form: userFormData }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success: ", data);
+          userdata = {};
+          document.getElementById("loading").classList.add("d-none");
+          document.getElementById("success").classList.remove("d-none");
+
+          // document.cookie = "cart=" + JSON.stringify(cart) + ";domain=;path=/";
+          // # window.location.href = "";
+        });
+    } else {
+      alert("Ma'lumot kiriting");
+      window.location.href = "{% url 'order' %}";
+    }
+  }
+</script>
+{% endblock content %}
+<!-- <form action="#" id="theform" class="d-none">
+      <div class="card mb-3">
+        <img id="orderimgid" class="orderimgclass" src="" alt="sampleimg" />
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control"
+          id="floatingInput"
+          placeholder="Ism"
+          value="{{user.first_name}}"
+          required
+        />
+        <label for="floatingInput">Ism:</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="number"
+          class="form-control"
+          id="floatingPassword"
+          placeholder="telefon raqam"
+          value="{{user.tel}}"
+          maxlength="12"
+          required
+        />
+        <label for="floatingInput">Telefon raqam:</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control modelinput"
+          id="floatingPassword"
+          placeholder="avto model"
+          required
+        />
+        <label for="floatingInput">Avto model:</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control colorinput"
+          id="floatingPassword "
+          placeholder="avto rangi:"
+          required
+        />
+        <label for="floatingInput">Avto rangi:</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input
+          type="text"
+          class="form-control numberinput"
+          id="floatingPassword"
+          placeholder="avto raqam"
+          required
+        />
+        <label for="floatingInput">Avto raqam:</label>
+      </div>
+      <div class="card mb-3 border border-3 p-1">
+        <button
+          type="button"
+          id="location"
+          onclick="getLocation()"
+          class="btn btn-outline-success w-100 mb-3"
+        >
+          <i class="fas fa-map-pin"></i> Manzil (lakatsiya)ni kiriting:
+          <i>ushbu tugmani bosish orqali </i>
+        </button>
+        //<img src="{% static 'images/map.jpg' %}" alt="sampleimg" /> 
+      </div>
+      <div>Yuvish qismi:</div>
+      <select
+        class="form-select form-select mb-3"
+        aria-label=".form-select example"
+      >
+        <option selected value="1">Faqat tashqi qism (60,000 so'm)</option>
+        <option value="2">Tashqi va ichki qism (70,000 so'm)</option>
+        <option value="3">VIP 3-fazalik (100,000 so'm)</option>
+      </select>
+      <div>To'lov turi:</div>
+      <select
+        class="form-select form-select mb-3"
+        aria-label=".form-select example"
+      >
+        <option selected value="1">Naqd</option>
+        <option value="2">Click</option>
+      </select>
+      <input
+        type="submit"
+        class="btn btn-primary mb-3 w-100"
+        value="Tasdiqlang"
+      />
+    </form>   -->

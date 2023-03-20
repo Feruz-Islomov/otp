@@ -1,0 +1,63 @@
+{% extends 'main.html' %}{% block balance %}
+<!--  -->
+{% if balance %}
+<div class="btn btn-success mx-1">Hisobingiz: {{balance.balance}}</div>
+{% endif %} {% endblock balance %} {% block orderbtn %}
+<a href="{% url 'orders' %}" class="btn btn-warning"
+  ><i class="fas fa-cart-plus"></i> Buyurtma qabul qilish</a
+>
+{% endblock orderbtn %} {% block content %}
+
+<div style="width: 100%; overflow-x: auto">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Manzil</th>
+        <th scope="col">Client Name</th>
+        <th scope="col">Model</th>
+        <th scope="col">Raqam</th>
+        <th scope="col">Yuvish qismi</th>
+        <th scope="col">Narxi</th>
+        <th scope="col">To'lov turi</th>
+        <th scope="col">Xizmat ko'rsatuvchi</th>
+        <th scope="col">Sana</th>
+        <th scope="col">Service</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if carts %} {% for cart in carts %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>
+          {% if cart.service == 'pending' %}
+          <a
+            href="http://www.google.com/search?q={{cart.latitude}}+{{cart.longitude}}"
+            target="_blank"
+          >
+            <button class="btn btn-info">manzil</button> </a
+          >{% else %} ___ {% endif %}
+        </td>
+        <td>{{cart.car.author.first_name}}</td>
+        <td>{{cart.car.Model}}</td>
+        <td>{{cart.car.author.tel}}</td>
+        <td>{{cart.part}}</td>
+        <td>{{cart.cost}}</td>
+        <td>{{cart.paytype}}</td>
+        <td>{{cart.service}} by {{cart.driver.first_name}</td>
+        <td>{{cart.date_ordered}}</td>
+        <td>
+          {% if cart.service == 'pending' %}
+          <a href="{% url 'finish_cart' cart.pk %}"
+            ><div id="finish_btn" class="btn btn-danger">finish</div></a
+          >
+          {% endif %} {{cart.service}}
+        </td>
+      </tr>
+      {% endfor %} {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<script type="text/javascript"></script>
+{% endblock content %}

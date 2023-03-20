@@ -1,0 +1,151 @@
+{% extends 'main.html' %} {% load static %}{% block orderbtn %}
+<a href="{% url 'order' %}" class="btn btn-warning"
+  ><h5 class="fas fa-shower"></h5>
+  <i class="fas fa-car"></i> Buyurtma</a
+>
+{% endblock orderbtn %} {% block placeorder %}
+<a class="dropdown-item" href="{% url 'order' %}">Buyurtma berish</a>
+<!--  -->
+{% endblock placeorder %} {% block orderhistory %}
+<a class="dropdown-item" href="{% url 'order_list' %}">Buyurtma tarixi</a>
+<!--  -->
+{% endblock orderhistory %} {% block content %}
+
+<!-- start -->
+<div class="container">
+  <div class="row">
+    <div class="col d-flex flex-row justify-content-between">
+      <!-- <div class="mt-3">
+        <a href="./driverProfile.html"> <i class="fas fa-arrow-left"></i></a>
+        <a href="#"> <i class="fas fa-arrow-right"></i></a>
+      </div> -->
+      <!-- <a href="./index.html"
+            ><img class="logopng" src="./logo3.png" alt="logo"
+          /></a> -->
+    </div>
+  </div>
+</div>
+
+<div class="container mt-3">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              {% if user.photo %}
+              <div class="position-relative">
+                <img
+                  src="{{user.photo.url}}"
+                  alt="user"
+                  class="rounded-circle"
+                  width="150"
+                />
+
+                <a href="{% url 'editprofile' user.pk %}">
+                  <i
+                    class="fas fa-edit text-secondary h3 position-absolute top-100 start-100 translate-middle"
+                  ></i>
+                </a>
+              </div>
+              {% else %}
+              <div class="position-relative">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                  alt="Admin"
+                  class="rounded-circle"
+                  width="150"
+                />
+                <a href="{% url 'editprofile' user.pk %}">
+                  <i
+                    class="fas fa-edit text-secondary h3 position-absolute top-100 start-100 translate-middle"
+                  ></i>
+                </a>
+              </div>
+              {% endif %}
+
+              <div class="mt-3 position-relative">
+                <h4>{{user.first_name}} {{user.last_name}}</h4>
+                <p class="text-secondary mb-1">{{user.shahar}}</p>
+                <p class="text-secondary mb-1">{{user.tel}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'order' %}" class="btn btn-warning mt-2 w-100"
+          ><h5 class="fas fa-shower"></h5>
+          <i class="fas fa-car"></i> Buyurtma berish</a
+        >
+        <a href="{% url 'addcar' %}" class="btn btn-info mt-2 w-100"
+          ><i class="fas fa-plus"></i> Avtomobil qo'shish</a
+        >
+        <a href="{% url 'order_list' %}" class="btn btn-secondary mt-2 w-100">
+          <i class="fas fa-list"></i> Buyurtma jarayoni</a
+        >
+      </div>
+      <div class="col-md-8">
+        <div class="row">
+          {% if messages %} {% for message in messages %}
+          <div
+            class="alert alert-success alert-dismissible fade show"
+            role="alert"
+          >
+            {{ message }}
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+          {% endfor %} {% endif %}
+        </div>
+        {% for car in cars %}
+        <a class="btn btn-danger" href="{% url 'deletecar' car.pk %}"
+          ><i class="fas fa-trash-alt"></i> O'chirish</a
+        >
+        <a class="btn btn-secondary" href="{% url 'editcar' car.pk %}"
+          ><i class="fas fa-edit"></i> O'zgartirish</a
+        >
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h6 class="mb-0">Avto model:</h6>
+                  </div>
+                  <div class="col-sm-6 text-secondary">{{car.Model}}</div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h6 class="mb-0">Avto rang:</h6>
+                  </div>
+                  <div class="col-sm-6 text-secondary">{{car.Rang}}</div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-6">
+                    <h6 class="mb-0">Avto raqam:</h6>
+                  </div>
+                  <div class="col-sm-6 text-secondary">{{car.Raqam}}</div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                {% if car.Photo %}
+                <div class="card mb-3">
+                  <img src="{{car.Photo.url}}" alt="img" />
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

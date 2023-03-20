@@ -1,0 +1,98 @@
+{% extends 'main.html' %} {% load static %} {% block balance %}
+<!--  -->
+{% if balance %}
+<div class="btn btn-success mx-1">Hisobingiz: {{balance.balance}}</div>
+{% endif %} {% endblock balance %} {% block orderbtn %}
+<a href="{% url 'orders' %}" class="btn btn-warning"
+  ><i class="fas fa-cart-plus"></i> Buyurtma qabul qilish</a
+>
+{% endblock orderbtn %} {% block orderhistory %}
+<a class="dropdown-item" href="{% url 'driver_order_list' %}"
+  >buyurtma tarixi</a
+>
+<!--  -->
+{% endblock orderhistory %} {% block content %} {% if balances %}
+<!--  -->
+{% for balance in balances %}
+<div class="btn btn-success mx-1">
+  User: {{balance.user}} Hisobingiz: {{balance.balance}}
+</div>
+{% endfor %} {% endif %}
+<div class="container mt-3">
+  <div class="row">
+    {% if messages %} {% for message in messages %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endfor %} {% endif %}
+  </div>
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              {% if user.photo %}
+              <div class="position-relative">
+                <img
+                  src="{{user.photo.url}}"
+                  alt="user"
+                  class="rounded"
+                  width="150px"
+                />
+
+                <a href="{% url 'editprofile' user.pk %}">
+                  <i
+                    class="fas fa-edit text-secondary h3 position-absolute top-100 start-100 translate-middle"
+                  ></i>
+                </a>
+              </div>
+              {% else %}
+              <div class="position-relative">
+                <img
+                  src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                  alt="Admin"
+                  class="rounded-circle"
+                  width="150"
+                />
+                <a href="{% url 'editprofile' user.pk %}">
+                  <i
+                    class="fas fa-edit text-secondary h3 position-absolute top-100 start-100 translate-middle"
+                  ></i>
+                </a>
+              </div>
+              {% endif %}
+
+              <div class="mt-3 position-relative">
+                <h4>{{user.first_name}}</h4>
+                <p class="text-secondary mb-1">{{user.shahar}}</p>
+                <p class="text-secondary mb-1">{{user.tel}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="{% url 'orders' %}" class="btn btn-warning mt-2 w-100">
+          <i class="fas fa-cart-plus"></i> Buyurtma qabul qilish</a
+        >
+        <a
+          href="{% url 'driver_order_list' %}"
+          class="btn btn-secondary mt-2 w-100"
+          ><i class="fas fa-list"></i> Buyurtma tarixi</a
+        >
+      </div>
+      <div class="col-md-8 mb-3">
+        <div class="row">
+          <hr />
+          <div class="display-5">Balans: {{t}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

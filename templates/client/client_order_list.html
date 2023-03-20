@@ -1,0 +1,49 @@
+{% extends 'main.html' %} {% block orderbtn %}
+<a href="{% url 'order' %}" class="btn btn-warning"
+  ><h5 class="fas fa-shower"></h5>
+  <i class="fas fa-car"></i> Buyurtma</a
+>
+{% endblock orderbtn %} {% block content %}
+<div class="ex" style="width: 100%; overflow-x: auto">
+  <table class="table table-sm">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Model</th>
+        <th scope="col">Raqam</th>
+        <th scope="col">Yuvish qismi</th>
+        <th scope="col">Narxi</th>
+        <th scope="col">Xizmat ko'rsatuvchi</th>
+        <th scope="col">Sana</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if orders %} {% for order in orders %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{order.car.Model}}</td>
+        <td>{{order.car.Raqam}}</td>
+        <td>{{order.part}}</td>
+        <td>{{order.cost}}</td>
+        <td>{{order.service}}</td>
+        <td>{{order.date_ordered}}</td>
+      </tr>
+      {% endfor %} {% endif %}
+      <!--  -->
+      {% if carts %} {% for cart in carts %}
+      <tr>
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{cart.car.Model}}</td>
+        <td>{{cart.car.Raqam}}</td>
+        <td>{{cart.part}}</td>
+        <td>{{cart.cost}}</td>
+        <td>
+          {{cart.service}} by {{cart.driver.first_name}}: +{{cart.driver.tel}}
+        </td>
+        <td>{{cart.date_ordered}}</td>
+      </tr>
+      {% endfor %} {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
